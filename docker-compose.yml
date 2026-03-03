@@ -1,0 +1,72 @@
+services:
+  node-app:
+    build: .
+    container_name: stack_overflow
+    ports:
+      - "3001:3001"
+    volumes:
+      - .:/app            
+      - /app/node_modules 
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - NODE_ENV=development
+    depends_on:
+      - redis
+      - mongo
+    networks:
+      - app-network
+
+  redis:
+    image: redis:6.0.7-alpine
+    container_name: redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - app-network
+
+  redis_insight:
+    image: redislabs/redisinsight:1.14.0
+    container_name: redis_insight
+    ports:
+      - "8001:8001"
+    depends_on:
+      - redis
+    networks:
+      - app-network
+
+  mongo:
+    image: mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: stackuser
+      MONGO_INITDB_ROOT_PASSWORD: stackpassword
+      MONGO_INITDB_DATABASE: stackoverflow
+    networks:
+      - app-network
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_URL: mongodb://stackuser:stackpassword@mongo:27017/
+      ME_CONFIG_BASICAUTH_ENABLED: true
+      ME_CONFIG_BASICAUTH_USERNAME: stackuser
+      ME_CONFIG_BASICAUTH_PASSWORD: stackpassword
+    depends_on:
+      - mongo
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  redis_data:
