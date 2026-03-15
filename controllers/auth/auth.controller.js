@@ -1,3 +1,4 @@
+const jwt = require('jsonwebtoken');
 const User = require('../../models/User');
 const { sendResponse, sendError } = require('../../utils/response');
 const redis = require('../../config/redis');
@@ -126,7 +127,9 @@ class AuthController {
 
     static async refresh(req, res) {
         try {
-            const refreshToken = req.ookies.refreshToken;
+            const refreshToken = req.cookies.refreshToken;
+
+            console.log("Refresh token", refreshToken);
 
             if (!refreshToken) {
                 return sendError(res, 401, 'No refresh token provided');
@@ -165,11 +168,10 @@ class AuthController {
 
         } catch (error) {
             console.error('Unsuccessful logout', error);
-            return sendError(res, 401, 'Invalid or expired refresh token');
+            return sendError(res, 401, 'Unsuccessful logout.');
         }
     }
 
-    
 }
 
 module.exports = AuthController;

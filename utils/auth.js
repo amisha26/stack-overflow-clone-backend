@@ -21,6 +21,7 @@ const setTokenCookie = (res, accessToken, refreshToken) => {
     const cookieOptions = {
         httpOnly: true,
         sameSite: 'strict',
+        secure: false,
     };
     
     // Access Token: expires in 15 mins
@@ -29,7 +30,8 @@ const setTokenCookie = (res, accessToken, refreshToken) => {
         accessToken, 
         {
             ...cookieOptions,
-            maxAge: parseInt(process.env.JWT_COOKIE_EXPIRES) * 60 * 1000
+            maxAge: parseInt(process.env.JWT_COOKIE_EXPIRES) * 60 * 1000,
+            path: '/'
         }
     );
 
@@ -39,7 +41,8 @@ const setTokenCookie = (res, accessToken, refreshToken) => {
         refreshToken, 
         {
             ...cookieOptions,
-            maxAge: parseInt(process.env.JWT_REFRESH_COOKIE_EXPIRE) * 24 * 60 * 60 * 1000
+            maxAge: parseInt(process.env.JWT_REFRESH_COOKIE_EXPIRE) * 24 * 60 * 60 * 1000,
+            path: '/api/auth/refresh'
         }
     );
 }

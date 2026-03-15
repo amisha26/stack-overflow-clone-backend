@@ -1,7 +1,9 @@
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
+const { sendResponse, sendError } = require('../utils/response');
 
 const authenticate = (req, res, next) => {
+
     const token = req.cookies.accessToken;
 
     if (!token) {
@@ -12,6 +14,7 @@ const authenticate = (req, res, next) => {
         req.user = { id: payload.id };
         next();
       } catch (err) {
+        console.log(err)
         return sendError(res, 401, 'Access token expired or invalid');
       }
 }

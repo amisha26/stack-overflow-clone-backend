@@ -18,8 +18,17 @@ const userNameField = z
   .min(2, "Username must be at least 2 characters")
   .max(50);
 
+
+const textField = z
+  .string()
+  .trim()
+  .min(2, "Field must contain at least 2 characters")
+  .max(50);
+
+
 module.exports = {
   emailField,
   passwordField,
   userNameField,
+  textField
 };

@@ -1,4 +1,4 @@
-// Model of Users table
+// Model for Users table
 
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
@@ -19,8 +19,15 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
         minlength: 4
-    }
-});
+    },
+    reputation: {
+      type: Number,
+      default: 50
+  }
+  },
+    {
+      timestamps: true
+  });
 
 // Hash password before saving
 userSchema.pre('save', async function () {

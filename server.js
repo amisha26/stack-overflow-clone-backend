@@ -6,7 +6,7 @@ const PORT = process.env.PORT;
 const connectDb = require('./config/db');
 
 const app = express();
-app.use(cookieParser);
+app.use(cookieParser());
 app.use(express.json({ limit: '10mb' }));
 app.use(
   express.urlencoded({
